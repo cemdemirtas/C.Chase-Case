@@ -8,6 +8,7 @@ public class CriminalPersonController : MonoBehaviour
 {
     NavMeshAgent nav;
     [SerializeField] Transform player;
+    [SerializeField] Transform ChainsConnectedPoint;
     [SerializeField] Transform colorStickman;
     [SerializeField] GameObject handcuffPrefab;
     private bool sealCharacter;
@@ -40,9 +41,20 @@ public class CriminalPersonController : MonoBehaviour
             prison.Arrest(nav);
             GameObject handcuff = Instantiate(handcuffPrefab, other.transform.position, Quaternion.identity);
             handcuff.transform.DOJump(player.position, 1f, 1, 0.01f);
+            Shackles.instance.removeChains();
+            this.removeChains();
         }
 
 
 
+    }
+    public void removeChains()
+    {
+        StartCoroutine(removeChain(ChainsConnectedPoint));
+    }
+    IEnumerator removeChain(Transform _ChainsConnectedPoint)
+    {
+        _ChainsConnectedPoint.gameObject.SetActive(false);
+        yield return new WaitForSeconds(2);
     }
 }

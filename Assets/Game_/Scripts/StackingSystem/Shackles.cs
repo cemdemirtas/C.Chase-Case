@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Shackles : MonoBehaviour
 {
+    public static Shackles instance;
     public List<Transform> ToChainedCharacters;
+    public List<Transform> connectedChains;
     [SerializeField] Transform ChainPrefab;
+    [SerializeField] Transform ChainsConnectedPoint;
     private void OnEnable()
     {
         ToChainedCharacters.Add(this.transform);
     }
-    private void Update()
+    private void Awake()
     {
-
+        if (instance == null) instance = this;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -34,7 +37,7 @@ public class Shackles : MonoBehaviour
             //tempChain.transform.GetChild(tempChain.transform.childCount - 1).transform.parent = other.transform.GetChild(0).transform;
             tempChain.transform.GetChild(tempChain.transform.childCount - 1).transform.localPosition = Vector3.zero;
             setPos();
-
+            connectedChains.Add(tempChain.transform);
         }
     }
     void setPos()
@@ -46,6 +49,20 @@ public class Shackles : MonoBehaviour
         {
             ToChainedCharacters[i].GetChild(0).GetChild(0).transform.localPosition = Vector3.zero;
             ToChainedCharacters[i].GetChild(0).GetChild(1).transform.localPosition = Vector3.zero;
+        }
+    }
+    public void removeChains()
+    {
+        StartCoroutine(removeChain(ChainsConnectedPoint));
+    }
+    IEnumerator removeChain(Transform _ChainsConnectedPoint)
+    {
+        _ChainsConnectedPoint.gameObject.SetActive(false);
+        yield return new WaitForSeconds(2);
+        foreach (var item in connectedChains)
+        {
+            item.gameObject.SetActive(false);
+
         }
     }
 }
