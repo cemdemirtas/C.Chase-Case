@@ -8,6 +8,7 @@ public class CriminalPersonController : MonoBehaviour
 {
     NavMeshAgent nav;
     [SerializeField] Transform player;
+    [SerializeField] Transform colorStickman;
     [SerializeField] GameObject handcuffPrefab;
     private bool sealCharacter;
     private void OnEnable()
@@ -27,7 +28,7 @@ public class CriminalPersonController : MonoBehaviour
         if (stacker != null && nav)
         {
             transform.GetComponent<CapsuleCollider>().enabled = false;
-            transform.GetComponentInChildren<Renderer>().material.color = Color.green;
+            colorStickman.GetComponent<Renderer>().material.color = Color.green;
             nav.enabled = true;
         }
 
@@ -35,7 +36,7 @@ public class CriminalPersonController : MonoBehaviour
         if (other.transform.TryGetComponent(out PrisonTrigger prison))
         {
             other.transform.GetComponent<BoxCollider>().enabled = true;
-            transform.GetComponentInChildren<Renderer>().material.color = Color.yellow; // To aware arrasted.
+            colorStickman.GetComponent<Renderer>().material.color = Color.yellow; // To aware arrasted.
             prison.Arrest(nav);
             GameObject handcuff = Instantiate(handcuffPrefab, other.transform.position, Quaternion.identity);
             handcuff.transform.DOJump(player.position, 1f, 1, 0.01f);
